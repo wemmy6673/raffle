@@ -55,10 +55,21 @@ contract Raffle is VRFConsumerBaseV2Plus {
         emit RaffleEntered(msg.sender);
     }
 
-    function pickWinner() external {
+    function checkUpKeep(bytes memory) public view  returns (bool upkeepNeeded, bytes memory /* performData */){
 
-        if((block.timestamp - s_lastTimeStamp) >= i_interval) {
+        bool timeHasPassed = (block.timestamp - s_lastTimeStamp) >= i_interval;
+        bool isOpen = s_raffleState == RaffleState.OPEN;
+        bool hasBalance = address(this).balance > 0;
+        bool hasPlayers = s_players.length > 0;
+        upkeepNeeded = timeHasPassed && isOpen && hasBalance && hasPlayers;
+        return (upkeepNeeded, "");
+    }
 
+
+    function performUpkeep(bytes calldata) external {
+
+        (bool upkeepNeeded, ) = checkUpKeep("");
+        if (!upkeepNeeded) {
             revert();
         }
 
