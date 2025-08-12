@@ -74,7 +74,7 @@ contract HelperConfig is CodeConstants, Script {
 }
 function getOrCreateAnvilEthConfig() public returns(NetworkConfig memory)
             {
-                if (localNetworkConfig.vrfCoordinator == address(0)) {
+                if (localNetworkConfig.vrfCoordinator != address(0)) {
                     return localNetworkConfig;
                 }
             vm.startBroadcast();
