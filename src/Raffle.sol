@@ -31,6 +31,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
+    event RequestedRaffleWinner(uint256 indexed requestId);
 
     constructor(uint256 entranceFee, uint256 interval, address vrfCoordinator, bytes32 gasLane, uint256 subscriptionId, uint32 callbackGasLimit) 
     VRFConsumerBaseV2Plus(vrfCoordinator) {
@@ -88,7 +89,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
                 )
             });
 
-            s_vrfCoordinator.requestRandomWords(request);
+            uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+            emit RequestedRaffleWinner(requestId);
 
     
     // function fulfillRandomWords(uint256 requestId, uint256[] callData randomWords) internal override
